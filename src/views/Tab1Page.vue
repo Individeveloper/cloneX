@@ -2,12 +2,26 @@
   <ion-page>
     <navbar></navbar>
     <ion-content>
-      <ion-item v-for="user in userlist">
-        <ion-label>
-          <h2>Username: {{ user.username }}</h2>
-          <p>Password: {{ user.password }}</p>
-        </ion-label>
-      </ion-item>
+      <div style="text-align: center; margin-top: 3rem;">
+        <h1 style="font-size: 40px;">Artikel</h1>
+        <p>Ikuti perkembangan terkini seputar pasar saham</p>
+      </div>
+      <ion-buttons slot="end">
+        <ion-button style="margin-top: 2rem;">Post Artikel</ion-button>
+      </ion-buttons>
+      <ion-card v-for="post in posts" :key="post.id" style="margin: 2rem; padding: 1rem;">
+        <ion-card-header>
+          <ion-card-title style="font-size: 1.7rem; font-weight: bold;">{{ post.title }}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          <div class="truncate">{{ post.content }}</div>
+          <p style="margin-top: 10px; font-weight: bold;">Created At: {{ post.createdAt }} From {{ post.userId }}</p>
+        </ion-card-content>
+
+        <ion-button fill="clear">Baca Artikel</ion-button>
+      </ion-card>
+
     </ion-content>
   </ion-page>
 </template>
@@ -18,22 +32,35 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import navbar from '@/components/navbar.vue';
 
-interface User {
-  username: string;
-  password: string;
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  userId: string;
 }
 
-const userlist = ref<User[]>([]);
+const posts = ref<Post[]>([]);
 
 const api = 'http://localhost/server_side/api.php';
 
 onMounted(async () => {
   try {
     const response = await axios.get(api);
-    userlist.value = response.data;
+    posts.value = response.data;
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error('Error fetching posts data:', error);
   }
 });
 
 </script>
+
+<style scoped>
+.truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

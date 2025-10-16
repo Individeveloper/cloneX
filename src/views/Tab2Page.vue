@@ -6,18 +6,111 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Tab 2</ion-title>
-        </ion-toolbar>
-      </ion-header>
+      <ion-card style="width: 70%; height: 50%; margin: 2rem auto; padding: 20px;">
+        <ion-card-header>
+          <ion-card-title style="font-size: 30px; font-weight: bold; text-align: center;">Post Artikel</ion-card-title>
+        </ion-card-header>
 
-      <ExploreContainer name="Tab 2 page" />
+        <ion-card-content style="display: flex; flex-direction: column; ">
+          <ion-item>
+            <ion-input label="Title" label-placement="stacked" placeholder="Title" v-model="title"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-textarea label="Content" label-placement="stacked" placeholder="Content"
+              v-model="content"></ion-textarea>
+          </ion-item>
+
+          <p v-if="errorMessage" style="margin-top: 10px; text-align: center; color: red">{{ errorMessage }}</p>
+
+          <ion-button expand="block" @click="handlePost" style="margin-top: 50px; width: 100%;"
+            :disabled="isPosting || content.length === 0 || title.length === 0">
+            <ion-spinner v-if="isPosting" name="crescent"></ion-spinner>
+            {{ isPosting ? 'Posting...' : 'Post' }}
+          </ion-button>
+
+        </ion-card-content>
+      </ion-card>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
+import { ref } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonTextarea, IonItem, IonButton, IonSpinner, IonInput, alertController } from '@ionic/vue';
+
+const router = useRouter();
+
+// State untuk formulir
+const title = ref('');
+const content = ref('');
+const errorMessage = ref('');
+const isPosting = ref(false);
+
+const insertApiUrl = 'http://localhost/server_side/post.php'; // Ganti URL API Anda
+
+const currentUserId = localStorage.getItem('user_token');
+
+const showAlert = async (header: string, message: string) => {
+  const alert = await alertController.create({
+    header,
+    message,
+    buttons: ['OK'],
+  });
+  await alert.present();
+};
+
+const handlePost = async () => {
+  errorMessage.value = '';
+  isPosting.value = true;
+
+  if (!currentUserId) {
+    await showAlert("Error", "Anda harus login untuk memposting.");
+    router.replace('tabs/login');
+    isPosting.value = false;
+    return;
+  }
+
+  // VAlIDASI TAMBAHAN: Cek Title
+  if (title.value.trim().length === 0) {
+    errorMessage.value = 'Judul artikel tidak boleh kosong.';
+    isPosting.value = false;
+    return;
+  }
+
+  // VALIDASI AWAL ANDA: Cek Content
+  if (content.value.trim().length === 0) {
+    errorMessage.value = 'Isi artikel tidak boleh kosong.';
+    isPosting.value = false;
+    return;
+  }
+
+  try {
+    const response = await axios.post(insertApiUrl, {
+      user_id: currentUserId,
+      title: title.value, // <-- KIRIMKAN TITLE
+      content: content.value
+    });
+
+    if (response.data.success) {
+      await showAlert("Sukses", "Artikel berhasil diposting!");
+      // BERSIHKAN KEDUA FIELD setelah sukses
+      title.value = '';
+      content.value = '';
+      router.replace('/tabs/home');
+    } else {
+      errorMessage.value = response.data.message || 'Gagal menyimpan artikel.';
+    }
+
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      errorMessage.value = error.response.data.message || 'Terjadi kesalahan pada server.';
+    } else {
+      errorMessage.value = 'Gagal terhubung ke server. Periksa koneksi Anda.';
+    }
+  } finally {
+    isPosting.value = false;
+  }
+};
 </script>

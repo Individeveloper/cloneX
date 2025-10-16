@@ -1,5 +1,6 @@
 <?php
-// Kode di halaman ini berfungsi untuk menampilkan data sesuai dengan database/table yang kamu buat
+
+// file ini untuk menampilkan data. Kamu bisa membuat sebuah tabel baru di database kamu
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
@@ -9,7 +10,7 @@ if($conn->connect_error){
     die("Koneksi Gagal: " . $conn->connect_error);
 }
 
-$query = "SELECT username, password FROM loginuser";
+$query = "SELECT * FROM post";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 

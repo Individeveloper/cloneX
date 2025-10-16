@@ -1,4 +1,5 @@
 <?php
+// Kode di halaman ini berfungsi untuk menampilkan data sesuai dengan database/table yang kamu buat
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");

@@ -8,8 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0);
 }
 
-$conn = new mysqli("localhost", "root", "", "tugasMobile");
-$data = json_decode(file_get_contents("php://input"), true);
+$conn = new mysqli("localhost", "root", "", "tugasMobile"); // Sesuaikan dengan nama database masing-masing
+$data = json_decode(file_get_contents("php://input"), true); 
 
 if ($conn->connect_error) {
     http_response_code(500);
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $data['username'] ?? '';
     $password = $data['password'] ?? '';
 
-    $stmt = $conn->prepare("SELECT * FROM loginuser WHERE username = ? AND password = ?");
+    $stmt = $conn->prepare("SELECT * FROM loginuser WHERE username = ? AND password = ?"); // Pastikan tabel dan kolom sesuai dengan database Anda 
     $stmt->bind_param("ss", $username, $password);
     $stmt->execute();
     $result = $stmt->get_result();

@@ -21,7 +21,13 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'login',
-        component: () => import('@/views/Login.vue')
+        component: () => import('@/views/Login.vue'),
+        meta: { hidetabs: true}
+      },
+      {
+        path: 'register',
+        component: () => import('@/views/register.vue'),
+        meta: { hidetabs: true}
       },
       {
         path: 'tab2',

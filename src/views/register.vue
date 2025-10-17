@@ -4,8 +4,8 @@
         <ion-content :fullscreen="true" class="login-content">
             <ion-card class="login-card">
                 <ion-card-header>
-                    <ion-card-title class="title">Welcome Back</ion-card-title>
-                    <p class="subtitle">Silakan masuk untuk melanjutkan</p>
+                    <ion-card-title class="title">Create Account</ion-card-title>
+                    <p class="subtitle">Daftar untuk mulai menggunakan aplikasi</p>
                 </ion-card-header>
 
                 <ion-card-content class="form">
@@ -20,7 +20,6 @@
                                 v-model="username"
                             ></ion-input>
                         </ion-item>
-
                         <ion-item class="form-item">
                             <ion-input
                                 label="Password"
@@ -31,8 +30,18 @@
                                 v-model="password"
                             ></ion-input>
                         </ion-item>
+                        <ion-item class="form-item">
+                            <ion-input
+                                label="Confirm Password"
+                                label-placement="floating"
+                                placeholder="Ulangi password"
+                                clear-input
+                                type="password"
+                                v-model="confirmPassword"
+                            ></ion-input>
+                        </ion-item>
                         <ion-item>
-                            <p>Belum punya akun? <router-link to="/tabs/register">Daftar</router-link></p>
+                            <p>Sudah memiliki akun? <router-link to="/tabs/login">Masuk</router-link></p>
                         </ion-item>
                     </ion-list>
 
@@ -41,12 +50,12 @@
                     <ion-button
                         expand="block"
                         class="login-btn"
-                        @click="handleLogin"
-                        :disabled="isLoggingIn"
+                        @click="handleRegister"
+                        :disabled="isRegistering"
                         size="large"
                     >
-                        <ion-spinner v-if="isLoggingIn" name="crescent"></ion-spinner>
-                        {{ isLoggingIn ? 'Logging in...' : 'Login' }}
+                        <ion-spinner v-if="isRegistering" name="crescent"></ion-spinner>
+                        {{ isRegistering ? 'Registering...' : 'Register' }}
                     </ion-button>
                 </ion-card-content>
             </ion-card>
@@ -55,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonSpinner, useIonRouter } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonSpinner, useIonRouter, alertController } from '@ionic/vue';
 import navbar from '@/components/navbar.vue';
 import axios from 'axios';
 import { ref } from 'vue';
@@ -64,17 +73,33 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const username = ref('');
 const password = ref('');
+const confirmPassword = ref('');
 const errorMessage = ref('');
-const isLoggingIn = ref(false);
-const api = 'http://localhost/server_side/login.php';
+const isRegistering = ref(false);
+const api = 'http://localhost/server_side/register.php';
 
-const handleLogin = async () => {
+const showAlert = async (header: string, message: string) => {
+  const alert = await alertController.create({
+    header,
+    message,
+    buttons: ['OK'],
+  });
+  await alert.present();
+};
+
+const handleRegister = async () => {
     errorMessage.value = '';
-    isLoggingIn.value = true;
+    isRegistering.value = true;
+
+    if (password.value !== confirmPassword.value) {
+        errorMessage.value = 'Passwords do not match.';
+        isRegistering.value = false;
+        return;
+    }
 
     if (!username.value || !password.value){
         errorMessage.value = 'Please enter both username and password.';
-        isLoggingIn.value = false;
+        isRegistering.value = false;
         return;
     }
 
@@ -83,19 +108,16 @@ const handleLogin = async () => {
             username: username.value,
             password: password.value
         });
-        
         if (response.data.success) {
-            localStorage.setItem('user_token', response.data.token)
-            localStorage.setItem('isLoggedIn', 'true');
-
-            router.push('/tabs/tab1');
+            await showAlert('Registration Successful', 'You can now log in with your credentials.');
+            router.push('/tabs/login');
         } else {
-            errorMessage.value = response.data.message || 'Login failed. Please try again.';
+            errorMessage.value = response.data.message || 'Registration failed. Please try again.';
         }
     } catch (error) {
         errorMessage.value = 'An error occurred. Please try again later.';
     } finally {
-        isLoggingIn.value = false;
+        isRegistering.value = false;
     }
 }
 
@@ -138,7 +160,6 @@ const handleLogin = async () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin: 0 auto;
 }
 
 .form-item {

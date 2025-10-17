@@ -1,38 +1,37 @@
 <template>
     <ion-page>
         <ion-header>
-            <navbar /> 
+            <navbar></navbar> 
         </ion-header>
-        <ion-content class="ion-padding">
-
-            <div v-if="isLoading" class="ion-text-center ion-padding">
+        <ion-content class="detail-content">
+            <div v-if="isLoading" class="state-wrap">
                 <ion-spinner name="crescent"></ion-spinner>
-                <p>Memuat detail artikel...</p>
+                <p class="state-text">Memuat detail artikel...</p>
             </div>
-            <div v-else-if="post">
-                <ion-card>
+
+            <div v-else-if="post" class="card-wrap">
+                <ion-card class="detail-card">
                     <ion-card-header>
-                        <ion-card-title>{{ post.title }}</ion-card-title>
-                        <ion-card-subtitle>Post ID: {{ post.id }}</ion-card-subtitle> 
+                        <ion-card-title class="title">{{ post.title }}</ion-card-title>
                     </ion-card-header>
-                    
                     <ion-card-content>
-                        <p style="white-space: pre-wrap;">{{ post.content }}</p> 
-                        <hr>
-                        <p class="ion-text-end">
-                            <small>Dibuat pada: {{ new Date(post.created_at).toLocaleDateString() }}</small>
-                            </p>
+                        <hr class="divider" />
+                        <p class="content">{{ post.content }}</p>
+                        <hr class="divider" />
+                        <p class="meta">
+                            <ion-card-subtitle class="subtitle">Post ID: {{ post.id }}</ion-card-subtitle>
+                            <small>Dibuat pada: {{ new Date(post.createdAt).toLocaleDateString() }}</small>
+                        </p>
                     </ion-card-content>
                 </ion-card>
             </div>
 
-            <div v-else class="ion-text-center ion-padding">
+            <div v-else class="state-wrap">
                 <ion-icon :icon="alertCircleOutline" size="large" color="danger"></ion-icon>
-                <h1>404 Not Found</h1>
-                <p>Artikel dengan ID tersebut tidak ditemukan.</p>
-                <ion-button router-link="/tabs/tab1">Kembali ke Beranda</ion-button>
+                <h1 class="title" style="margin-top: 10px;">404 Not Found</h1>
+                <p class="state-text">Artikel dengan ID tersebut tidak ditemukan.</p>
+                <ion-button router-link="/tabs/tab1" class="login-btn" size="default">Kembali ke Beranda</ion-button>
             </div>
-            
         </ion-content>
     </ion-page>
 </template>
@@ -49,7 +48,7 @@ interface Post {
     id: number;
     title: string;
     content: string;
-    created_at: string; 
+    createdAt: string; 
 }
 
 const post = ref<Post | null>(null);
@@ -91,3 +90,88 @@ watch(
     }
 );
 </script>
+
+<style scoped>
+.detail-content {
+  --background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0b1324 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.card-wrap {
+  width: 100%;
+  max-width: 1000px;
+  padding: 0 16px;
+  margin: 4rem auto;
+}
+
+.detail-card {
+  width: 100%;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(2, 8, 23, 0.35);
+  backdrop-filter: blur(6px);
+  padding: 7px 15px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 800;
+  text-align: center;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+}
+
+.content {
+  white-space: pre-wrap;
+  color: #e5e7eb;
+  line-height: 1.65;
+  font-size: 15px;
+  margin: 20px 0;
+}
+
+.meta {
+    display: flex;
+    justify-content: space-between;
+  margin-top: 10px;
+  text-align: right;
+  color: rgba(255,255,255,0.6);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin: 12px 0;
+}
+
+.state-wrap {
+  width: 100%;
+  max-width: 820px;
+  padding: 40px 16px;
+  margin: 0 auto;
+  text-align: center;
+  color: #e5e7eb;
+}
+
+.state-text {
+  margin-top: 10px;
+  color: rgba(255,255,255,0.7);
+}
+
+.login-btn {
+  margin-top: 12px;
+  --border-radius: 14px;
+  --background: linear-gradient(135deg, var(--ion-color-primary) 0%, #6c5ce7 100%);
+  --box-shadow: 0 10px 18px rgba(108, 92, 231, 0.35);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+</style>

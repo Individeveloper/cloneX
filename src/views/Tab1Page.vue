@@ -1,30 +1,32 @@
 <template>
   <ion-page>
     <navbar></navbar>
-    <ion-content>
-      <div style="text-align: center; margin-top: 3rem;">
-        <h1 style="font-size: 40px;">Artikel</h1>
-        <p>Ikuti perkembangan terkini seputar pasar saham</p>
-      </div>
-      <ion-buttons slot="end">
-        <ion-button style="margin-top: 2rem;">Post Artikel</ion-button>
-      </ion-buttons>
-      <ion-card v-for="post in posts" :key="post.id" style="margin: 2rem; padding: 1rem;">
-        <ion-card-header>
-          <ion-card-title style="font-size: 1.7rem; font-weight: bold;">{{ post.title }}</ion-card-title>
-        </ion-card-header>
+    <ion-content class="login-content">
+      <section class="hero">
+        <h1 class="hero-title">Artikel</h1>
+        <p class="hero-subtitle">Ikuti perkembangan terkini seputar pasar saham</p>
+        
+      </section>
 
-        <ion-card-content>
-          <div class="truncate">{{ post.content }}</div>
-          <p style="margin-top: 10px; font-weight: bold;">Created At: {{ post.createdAt }}</p>
-        </ion-card-content>
+      <section class="list-wrap">
+        <ion-buttons style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+          <ion-button class="post-btn" @click="router.push('/tabs/tab2')">Post Artikel</ion-button>
+        </ion-buttons>
+        <ion-card v-for="post in posts" :key="post.id" class="post-card">
+          <ion-card-header>
+            <ion-card-title class="post-title">{{ post.title }}</ion-card-title>
+          </ion-card-header>
 
-        <ion-button fill="clear" @click="router.push(`/tabs/detail/${post.id}`)">
-          Baca Artikel
-        </ion-button>
+          <ion-card-content>
+            <div class="truncate">{{ post.content }}</div>
+            <p class="post-meta">Created At: {{ post.createdAt }}</p>
+          </ion-card-content>
 
-      </ion-card>
-
+          <ion-button fill="clear" class="read-btn" @click="router.push(`/tabs/detail/${post.id}`)">
+            Baca Artikel
+          </ion-button>
+        </ion-card>
+      </section>
     </ion-content>
   </ion-page>
 </template>
@@ -59,11 +61,73 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.login-content {
+  --background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0b1324 100%);
+  padding-bottom: 24px;
+}
+
+.hero {
+  text-align: center;
+  padding: 36px 16px 8px;
+  color: #e5e7eb;
+}
+
+.hero-title {
+  font-size: 34px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.hero-subtitle {
+  margin-top: 6px;
+  color: rgba(255,255,255,0.7);
+}
+
+.list-wrap {
+  max-width: 980px;
+  margin: 10px auto 0;
+  padding: 0 20px;
+}
+
+.post-card {
+  margin: 16px 0;
+  border-radius: 16px;
+  box-shadow: 0 8px 26px rgba(2, 8, 23, 0.28);
+  backdrop-filter: blur(6px);
+  padding: 7px 15px;
+}
+
+.post-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.post-meta {
+  margin-top: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+}
+
+.read-btn {
+  --color: var(--ion-color-primary);
+  font-weight: 700;
+}
+
+.post-btn {
+  --background: linear-gradient(135deg, var(--ion-color-primary) 0%, #6c5ce7 100%);
+  --box-shadow: 0 10px 18px rgba(108, 92, 231, 0.35);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
 .truncate {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #e5e7eb;
+  line-height: 1.6;
 }
 </style>

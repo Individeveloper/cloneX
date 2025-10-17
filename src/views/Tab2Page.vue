@@ -2,32 +2,52 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Tab 2</ion-title>
+        <ion-title>Post Artikel</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-card style="width: 70%; height: 50%; margin: 2rem auto; padding: 20px;">
+    <ion-content :fullscreen="true" class="post-content">
+      <ion-card class="post-card">
         <ion-card-header>
-          <ion-card-title style="font-size: 30px; font-weight: bold; text-align: center;">Post Artikel</ion-card-title>
+          <ion-card-title class="title">Tulis Artikel</ion-card-title>
+          <p class="subtitle">Bagikan wawasan Anda</p>
         </ion-card-header>
 
-        <ion-card-content style="display: flex; flex-direction: column; ">
-          <ion-item>
-            <ion-input label="Title" label-placement="stacked" placeholder="Title" v-model="title"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-textarea label="Content" label-placement="stacked" placeholder="Content"
-              v-model="content"></ion-textarea>
-          </ion-item>
+        <ion-card-content class="form">
+          <ion-list lines="none">
+            <ion-item class="form-item">
+              <ion-input
+                label="Title"
+                label-placement="floating"
+                placeholder="Judul artikel"
+                clear-input
+                type="text"
+                v-model="title"
+              ></ion-input>
+            </ion-item>
 
-          <p v-if="errorMessage" style="margin-top: 10px; text-align: center; color: red">{{ errorMessage }}</p>
+            <ion-item class="form-item">
+              <ion-textarea
+                label="Content"
+                label-placement="floating"
+                placeholder="Tulis isi artikel"
+                auto-grow
+                v-model="content"
+              ></ion-textarea>
+            </ion-item>
+          </ion-list>
 
-          <ion-button expand="block" @click="handlePost" style="margin-top: 50px; width: 100%;"
-            :disabled="isPosting || content.length === 0 || title.length === 0">
+          <p v-if="errorMessage" class="error-text">{{ errorMessage }}</p>
+
+          <ion-button
+            expand="block"
+            class="login-btn"
+            @click="handlePost"
+            :disabled="isPosting || content.length === 0 || title.length === 0"
+            size="large"
+          >
             <ion-spinner v-if="isPosting" name="crescent"></ion-spinner>
             {{ isPosting ? 'Posting...' : 'Post' }}
           </ion-button>
-
         </ion-card-content>
       </ion-card>
     </ion-content>
@@ -101,3 +121,82 @@ const handlePost = async () => {
   }
 };
 </script>
+
+<style scoped>
+.post-content {
+  --background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0b1324 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.post-card {
+  width: 100%;
+  max-width: 720px;
+  border-radius: 18px;
+  padding-bottom: 10px;
+  box-shadow: 0 10px 30px rgba(2, 8, 23, 0.35);
+  backdrop-filter: blur(6px);
+  margin: 4rem auto;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 800;
+  text-align: left;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+}
+
+.subtitle {
+  margin: 6px 0 4px;
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-item {
+  --background: rgba(255,255,255,0.06);
+  --border-radius: 14px;
+  --highlight-color-focused: var(--ion-color-primary);
+  border-radius: 14px;
+  margin: 6px 0;
+  backdrop-filter: blur(4px);
+}
+
+.form-item ion-input,
+.form-item ion-textarea {
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  color: #e5e7eb;
+}
+
+.error-text {
+  margin: 6px 2px 2px;
+  text-align: center;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.login-btn {
+  margin-top: 12px;
+  --border-radius: 14px;
+  --background: linear-gradient(135deg, var(--ion-color-primary) 0%, #6c5ce7 100%);
+  --box-shadow: 0 10px 18px rgba(108, 92, 231, 0.35);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+</style>

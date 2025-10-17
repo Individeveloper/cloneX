@@ -50,8 +50,6 @@ const isPosting = ref(false);
 
 const insertApiUrl = 'http://localhost/server_side/post.php'; // Ganti URL API Anda
 
-const currentUserId = localStorage.getItem('user_token');
-
 const showAlert = async (header: string, message: string) => {
   const alert = await alertController.create({
     header,
@@ -65,21 +63,12 @@ const handlePost = async () => {
   errorMessage.value = '';
   isPosting.value = true;
 
-  if (!currentUserId) {
-    await showAlert("Error", "Anda harus login untuk memposting.");
-    router.replace('tabs/login');
-    isPosting.value = false;
-    return;
-  }
-
-  // VAlIDASI TAMBAHAN: Cek Title
   if (title.value.trim().length === 0) {
     errorMessage.value = 'Judul artikel tidak boleh kosong.';
     isPosting.value = false;
     return;
   }
 
-  // VALIDASI AWAL ANDA: Cek Content
   if (content.value.trim().length === 0) {
     errorMessage.value = 'Isi artikel tidak boleh kosong.';
     isPosting.value = false;
@@ -88,17 +77,15 @@ const handlePost = async () => {
 
   try {
     const response = await axios.post(insertApiUrl, {
-      user_id: currentUserId,
-      title: title.value, // <-- KIRIMKAN TITLE
-      content: content.value
+      title: title.value,
+      content: content.value,
     });
 
     if (response.data.success) {
       await showAlert("Sukses", "Artikel berhasil diposting!");
-      // BERSIHKAN KEDUA FIELD setelah sukses
       title.value = '';
       content.value = '';
-      router.replace('/tabs/home');
+      router.replace('/tabs/tab1');
     } else {
       errorMessage.value = response.data.message || 'Gagal menyimpan artikel.';
     }

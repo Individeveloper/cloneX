@@ -16,10 +16,13 @@
 
         <ion-card-content>
           <div class="truncate">{{ post.content }}</div>
-          <p style="margin-top: 10px; font-weight: bold;">Created At: {{ post.createdAt }} From {{ post.userId }}</p>
+          <p style="margin-top: 10px; font-weight: bold;">Created At: {{ post.createdAt }}</p>
         </ion-card-content>
 
-        <ion-button fill="clear">Baca Artikel</ion-button>
+        <ion-button fill="clear" @click="router.push(`/tabs/detail/${post.id}`)">
+          Baca Artikel
+        </ion-button>
+
       </ion-card>
 
     </ion-content>
@@ -27,17 +30,17 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import { IonPage, IonContent } from '@ionic/vue';
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import navbar from '@/components/navbar.vue';
+import router from '@/router';
 
 interface Post {
   id: number;
   title: string;
   content: string;
   createdAt: string;
-  userId: string;
 }
 
 const posts = ref<Post[]>([]);
@@ -59,7 +62,7 @@ onMounted(async () => {
 .truncate {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
 }

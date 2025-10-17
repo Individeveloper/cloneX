@@ -21,28 +21,26 @@ if ($conn->connect_error) {
 // 3. Terima Data JSON dari Frontend
 $data = json_decode(file_get_contents("php://input"), true) ?? [];
 
-$user_id_raw = $data['userId'] ?? $data['user_id'] ?? null; // terima kedua format kunci
+
 $title = isset($data['title']) ? trim($data['title']) : null;
 $content = isset($data['content']) ? trim($data['content']) : null;
 
-// 4. Validasi Input
-$user_id = filter_var($user_id_raw, FILTER_VALIDATE_INT);
 
-if (!$user_id || $user_id <= 0 || $title === '' || $content === '') {
+if ($title === '' || $content === '') {
     http_response_code(400);
     echo json_encode([
-        "message" => "Field userId, title, dan content wajib diisi dengan benar.",
+        "message" => "Field title, dan content wajib diisi dengan benar.",
         "success" => false
     ]);
     exit(0);
 }
 
 // PASTIKAN KOLOM 'title' ADA di tabel 'post'
-$query = "INSERT INTO post (userId, title, content) VALUES (?, ?, ?)";
+$query = "INSERT INTO post (title, content) VALUES (?, ?)";
 $stmt = $conn->prepare($query);
 
-// Ikat parameter: s (user_id), s (title), s (content)
-$stmt->bind_param("sss", $user_id, $title, $content);
+// Ikat parameter: s (title), s (content)
+$stmt->bind_param("ss", $title, $content);
 
 if ($stmt->execute()) {
     http_response_code(201); // Created

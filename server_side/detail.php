@@ -25,7 +25,7 @@ if (empty($post_id)) {
 
 // 2. Query Data dengan Prepared Statement
 // PERBAIKAN: HANYA AMBIL id, title, content, dan created_at. userId DIHAPUS.
-$query = "SELECT id, title, content, created_at FROM post WHERE id = ? LIMIT 1"; 
+$query = "SELECT id, title, content, createdAt FROM post WHERE id = ? LIMIT 1"; 
 $stmt = $conn->prepare($query);
 
 if (!$stmt) {

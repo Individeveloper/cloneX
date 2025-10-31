@@ -17,7 +17,6 @@
             <ion-card-title class="post-title">{{ post.title }}</ion-card-title>
           </ion-card-header>
 
-<<<<<<< HEAD
           <ion-card-content>
             <div class="truncate">{{ post.content }}</div>
             <p class="post-meta">Created At: {{ post.createdAt }}</p>
@@ -28,15 +27,7 @@
           </ion-button>
         </ion-card>
       </section>
-=======
-        <ion-button fill="clear" @click="router.push(`/tabs/detail/${post.id}`)">
-          Baca Artikel
-        </ion-button>
-
-      </ion-card>
-4
->>>>>>> 89471f8 (WIP: local changes)
-    </ion-content>
+  </ion-content>
   </ion-page>
 </template>
 
@@ -56,7 +47,7 @@ interface Post {
 
 const posts = ref<Post[]>([]);
 
-const api = 'http://localhost/server_side/api.php';
+const api = 'http://localhost/cloneX/server_side/api.php';
 
 onMounted(async () => {
   try {

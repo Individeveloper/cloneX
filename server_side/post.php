@@ -1,4 +1,5 @@
 <?php
+require_once 'auth.php';
 // 1. Atur Header (CORS)
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");

@@ -66,7 +66,7 @@ const username = ref('');
 const password = ref('');
 const errorMessage = ref('');
 const isLoggingIn = ref(false);
-const api = 'http://localhost/server_side/login.php';
+const api = 'http://localhost/cloneX/server_side/login.php';
 
 const handleLogin = async () => {
     errorMessage.value = '';
@@ -82,6 +82,11 @@ const handleLogin = async () => {
         const response = await axios.post(api,{
             username: username.value,
             password: password.value
+        }, {
+            headers: {
+                'X-API-Key': '12345',
+                'Content-Type': 'application/json'
+            }
         });
         
         if (response.data.success) {

@@ -94,12 +94,17 @@ CREATE TABLE post (
 
 1. **Pindahkan folder `server_side`** ke dalam direktori **htdocs** di XAMPP Anda
    ```bash
-   # Contoh di Windows
+   # Contoh di Windows (sesuaikan path dengan lokasi instalasi XAMPP Anda)
+   # Default: C:/xampp/htdocs/
    cp -r server_side C:/xampp/htdocs/cloneX/
    
-   # Contoh di Mac/Linux
+   # Contoh di Mac/Linux (sesuaikan path dengan lokasi instalasi XAMPP Anda)
+   # Default Mac: /Applications/XAMPP/htdocs/
+   # Default Linux: /opt/lampp/htdocs/
    cp -r server_side /Applications/XAMPP/htdocs/cloneX/
    ```
+   
+   **Catatan**: Buat folder `cloneX` di dalam `htdocs` jika belum ada, atau sesuaikan nama folder dengan preferensi Anda.
 
 2. Pastikan konfigurasi database di file PHP sudah sesuai:
    - Host: `localhost`

@@ -72,8 +72,8 @@ CREATE TABLE IF NOT EXISTS post (
 
 -- Insert data contoh (opsional)
 INSERT INTO post (title, content) VALUES 
-('Panduan Investasi Saham untuk Pemula', 'Investasi saham merupakan salah satu cara yang populer untuk mengembangkan aset...'),
-('Analisis Pasar Saham Hari Ini', 'Pasar saham hari ini menunjukkan tren yang positif dengan berbagai sektor...');
+('Panduan Investasi Saham untuk Pemula', 'Investasi saham merupakan salah satu cara yang populer untuk mengembangkan aset. Bagi pemula, penting untuk memahami dasar-dasar pasar modal, melakukan riset mendalam, dan diversifikasi portofolio untuk meminimalkan risiko.'),
+('Analisis Pasar Saham Hari Ini', 'Pasar saham hari ini menunjukkan tren yang positif dengan berbagai sektor mengalami kenaikan. Sektor teknologi dan kesehatan memimpin dengan pertumbuhan signifikan, sementara investor tetap optimis melihat indikator ekonomi yang stabil.');
 ```
 
 ### Langkah 3: Setup Backend (Server Side)

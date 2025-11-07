@@ -55,11 +55,16 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonSpinner, useIonRouter } from '@ionic/vue';
-import navbar from '@/components/navbar.vue';
-import axios from 'axios';
 import { ref } from 'vue';
+import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { 
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, 
+  IonTextarea, IonItem, IonButton, IonSpinner, IonInput, 
+  IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonList,
+  alertController 
+} from '@ionic/vue';
+import navbar from '@/components/navbar.vue';
 
 const router = useRouter();
 const username = ref('');
@@ -90,9 +95,9 @@ const handleLogin = async () => {
         });
         
         if (response.data.success) {
-            localStorage.setItem('user_token', response.data.token)
+            localStorage.setItem('user_token', response.data.token || 'dummy_token');
+            localStorage.setItem('username', response.data.username);  // Tambahkan ini
             localStorage.setItem('isLoggedIn', 'true');
-
             router.push('/tabs/tab1');
         } else {
             errorMessage.value = response.data.message || 'Login failed. Please try again.';

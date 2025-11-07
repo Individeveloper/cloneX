@@ -53,7 +53,7 @@ interface Post {
 
 const post = ref<Post | null>(null);
 const isLoading = ref(true); 
-const api = 'http://localhost/server_side/detail.php'; 
+const api = 'http://localhost/cloneX/server_side/account.php'; 
 const route = useRoute();
 
 async function fetchPost(id: number | string) {
@@ -61,12 +61,14 @@ async function fetchPost(id: number | string) {
     post.value = null;
 
     try {
-        const response = await axios.get(`${api}?id=${id}`);
+        const response = await axios.get(`${api}?endpoint=post_detail&id=${id}`, {
+            headers: {
+                'X-API-Key': '12345'
+            }
+        });
         
-        if (response.data && response.data.record) {
-            post.value = response.data.record as Post;
-        } else if (response.data && response.data.length > 0) {
-            post.value = response.data[0] as Post; 
+        if (response.data && response.data.length > 0) {
+            post.value = response.data[0] as Post;
         } else {
             post.value = null; 
         }

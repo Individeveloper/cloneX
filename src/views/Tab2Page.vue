@@ -68,7 +68,7 @@ const content = ref('');
 const errorMessage = ref('');
 const isPosting = ref(false);
 
-const insertApiUrl = 'http://localhost/server_side/post.php'; // Ganti URL API Anda
+const insertApiUrl = 'http://localhost/cloneX/server_side/post.php'; // Ganti URL API Anda
 
 const showAlert = async (header: string, message: string) => {
   const alert = await alertController.create({
@@ -96,9 +96,17 @@ const handlePost = async () => {
   }
 
   try {
+    const username = localStorage.getItem('username') || '';
+    
     const response = await axios.post(insertApiUrl, {
       title: title.value,
       content: content.value,
+      username: username
+    }, {
+      headers: {
+        'X-API-Key': '12345',
+        'Content-Type': 'application/json'
+      }
     });
 
     if (response.data.success) {

@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo json_encode(array(
                 "message" => "Login successful",
                 "success" => true,
-                "username" => $username
+                "username" => $username  // Pastikan ini ada
             ));
         } else {
             http_response_code(401);

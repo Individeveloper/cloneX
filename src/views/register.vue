@@ -1,6 +1,5 @@
 <template>
     <ion-page>
-        <navbar></navbar>
         <ion-content :fullscreen="true" class="login-content">
             <ion-card class="login-card">
                 <ion-card-header>
@@ -18,6 +17,16 @@
                                 clear-input
                                 type="text"
                                 v-model="username"
+                            ></ion-input>
+                        </ion-item>
+                        <ion-item class="form-item">
+                            <ion-input
+                                label="Email"
+                                label-placement="floating"
+                                placeholder="Masukkan email"
+                                clear-input
+                                type="text"
+                                v-model="email"
                             ></ion-input>
                         </ion-item>
                         <ion-item class="form-item">
@@ -73,10 +82,11 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const username = ref('');
 const password = ref('');
+const email = ref('');
 const confirmPassword = ref('');
 const errorMessage = ref('');
 const isRegistering = ref(false);
-const api = 'http://localhost/server_side/register.php';
+const api = 'http://localhost/cloneX/server_side/register.php';
 
 const showAlert = async (header: string, message: string) => {
   const alert = await alertController.create({
@@ -97,8 +107,8 @@ const handleRegister = async () => {
         return;
     }
 
-    if (!username.value || !password.value){
-        errorMessage.value = 'Please enter both username and password.';
+    if (!username.value || !password.value || !email.value) {
+        errorMessage.value = 'Please enter needed fields.';
         isRegistering.value = false;
         return;
     }
@@ -106,7 +116,8 @@ const handleRegister = async () => {
     try {
         const response = await axios.post(api,{
             username: username.value,
-            password: password.value
+            password: password.value,
+            email: email.value
         });
         if (response.data.success) {
             await showAlert('Registration Successful', 'You can now log in with your credentials.');

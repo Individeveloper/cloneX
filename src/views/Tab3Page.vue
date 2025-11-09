@@ -24,24 +24,13 @@
               </ion-label>
             </ion-item>
           </ion-list>
-          
-          <ion-button 
-            expand="block" 
-            fill="outline" 
-            @click="openEditProfile"
-            class="edit-btn"
-          >
+
+          <ion-button expand="block" fill="outline" @click="openEditProfile" class="edit-btn">
             <ion-icon :icon="pencil" slot="start"></ion-icon>
             Edit Profile
           </ion-button>
-          
-          <ion-button 
-            expand="block" 
-            fill="outline" 
-            color="medium"
-            @click="openChangePassword"
-            class="password-btn"
-          >
+
+          <ion-button expand="block" fill="outline" color="medium" @click="openChangePassword" class="password-btn">
             <ion-icon :icon="lockClosed" slot="start"></ion-icon>
             Change Password
           </ion-button>
@@ -55,26 +44,26 @@
         </ion-card-header>
         <ion-card-content>
           <ion-list v-if="userPosts.length > 0">
-            <ion-item-sliding v-for="post in userPosts" :key="post.id">
+            <div class="post-row" v-for="post in userPosts" :key="post.id">
               <ion-item class="post-item">
-                <ion-label>
+                <ion-label class="post-label">
                   <h3>{{ post.title }}</h3>
                   <p>{{ post.content.substring(0, 100) }}...</p>
                   <ion-note>{{ formatDate(post.created_at) }}</ion-note>
+                  <div class="post-actions-bottom">
+                    <ion-button size="small" fill="clear" @click.stop="editPost(post)">
+                      <ion-icon :icon="pencil"></ion-icon>
+                    </ion-button>
+                    <ion-button size="small" fill="clear" color="danger" @click.stop="deletePost(post.id)">
+                      <ion-icon :icon="trash"></ion-icon>
+                    </ion-button>
+                  </div>
                 </ion-label>
+
+                <!-- Actions moved to bottom of the post card -->
+
               </ion-item>
-              
-              <ion-item-options side="end">
-                <ion-item-option @click="editPost(post)" color="primary">
-                  <ion-icon :icon="pencil"></ion-icon>
-                  Edit
-                </ion-item-option>
-                <ion-item-option @click="deletePost(post.id)" color="danger">
-                  <ion-icon :icon="trash"></ion-icon>
-                  Delete
-                </ion-item-option>
-              </ion-item-options>
-            </ion-item-sliding>
+            </div>
           </ion-list>
           <div v-else class="no-posts">
             <ion-icon :icon="documentText" size="large"></ion-icon>
@@ -95,21 +84,12 @@
         </ion-header>
         <ion-content class="ion-padding">
           <ion-item>
-            <ion-input
-              v-model="editForm.username"
-              label="Username"
-              label-placement="stacked"
-              placeholder="Enter username"
-            ></ion-input>
+            <ion-input v-model="editForm.username" label="Username" label-placement="stacked"
+              placeholder="Enter username"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-input
-              v-model="editForm.email"
-              label="Email"
-              label-placement="stacked"
-              type="email"
-              placeholder="Enter email"
-            ></ion-input>
+            <ion-input v-model="editForm.email" label="Email" label-placement="stacked" type="email"
+              placeholder="Enter email"></ion-input>
           </ion-item>
           <ion-button expand="block" @click="updateProfile" class="save-btn">
             Save Changes
@@ -129,31 +109,16 @@
         </ion-header>
         <ion-content class="ion-padding">
           <ion-item>
-            <ion-input
-              v-model="passwordForm.currentPassword"
-              label="Current Password"
-              label-placement="stacked"
-              type="password"
-              placeholder="Enter current password"
-            ></ion-input>
+            <ion-input v-model="passwordForm.currentPassword" label="Current Password" label-placement="stacked"
+              type="password" placeholder="Enter current password"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-input
-              v-model="passwordForm.newPassword"
-              label="New Password"
-              label-placement="stacked"
-              type="password"
-              placeholder="Enter new password"
-            ></ion-input>
+            <ion-input v-model="passwordForm.newPassword" label="New Password" label-placement="stacked" type="password"
+              placeholder="Enter new password"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-input
-              v-model="passwordForm.confirmPassword"
-              label="Confirm Password"
-              label-placement="stacked"
-              type="password"
-              placeholder="Confirm new password"
-            ></ion-input>
+            <ion-input v-model="passwordForm.confirmPassword" label="Confirm Password" label-placement="stacked"
+              type="password" placeholder="Confirm new password"></ion-input>
           </ion-item>
           <ion-button expand="block" @click="changePassword" class="save-btn">
             Update Password
@@ -173,21 +138,12 @@
         </ion-header>
         <ion-content class="ion-padding">
           <ion-item>
-            <ion-input
-              v-model="editPostForm.title"
-              label="Title"
-              label-placement="stacked"
-              placeholder="Enter post title"
-            ></ion-input>
+            <ion-input v-model="editPostForm.title" label="Title" label-placement="stacked"
+              placeholder="Enter post title"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-textarea
-              v-model="editPostForm.content"
-              label="Content"
-              label-placement="stacked"
-              placeholder="Enter post content"
-              :rows="6"
-            ></ion-textarea>
+            <ion-textarea v-model="editPostForm.content" label="Content" label-placement="stacked"
+              placeholder="Enter post content" :rows="6"></ion-textarea>
           </ion-item>
           <ion-button expand="block" @click="updatePost" class="save-btn">
             Update Post
@@ -199,8 +155,8 @@
 </template>
 
 <script setup lang="ts">
-import { 
-  IonPage, IonHeader, IonContent, IonCard, IonCardHeader, IonCardContent, 
+import {
+  IonPage, IonHeader, IonContent, IonCard, IonCardHeader, IonCardContent,
   IonCardTitle, IonList, IonItem, IonLabel, IonButton, IonIcon, IonModal,
   IonToolbar, IonTitle, IonButtons, IonInput, IonTextarea, IonItemSliding,
   IonItemOptions, IonItemOption, IonNote, alertController, toastController
@@ -237,6 +193,7 @@ const passwordForm = ref({
 });
 const editPostForm = ref<Post>({ id: 0, title: '', content: '', created_at: '' });
 
+// Use the profile endpoint for profile ops, and the dedicated user_posts endpoint for post mutations
 const profileApi = 'http://localhost/cloneX/server_side/profile.php';
 const postsApi = 'http://localhost/cloneX/server_side/user_posts.php';
 
@@ -248,10 +205,17 @@ onMounted(async () => {
 const loadUserProfile = async () => {
   try {
     const username = localStorage.getItem('username') || '';
-    const response = await axios.get(`${profileApi}?username=${username}`, {
+    if (!username) {
+      userProfile.value = { username: '', email: '' };
+      return;
+    }
+
+    // profile.php expects ?username=... and returns a single user object
+    const response = await axios.get(`${profileApi}?username=${encodeURIComponent(username)}`, {
       headers: { 'X-API-Key': '12345' }
     });
-    userProfile.value = response.data;
+    const user = response.data;
+    userProfile.value = user && user.username ? { username: user.username, email: user.email || '' } : { username, email: '' };
   } catch (error) {
     console.error('Error loading profile:', error);
   }
@@ -260,10 +224,24 @@ const loadUserProfile = async () => {
 const loadUserPosts = async () => {
   try {
     const username = localStorage.getItem('username') || '';
-    const response = await axios.get(`${postsApi}?username=${username}`, {
+    if (!username) {
+      userPosts.value = [];
+      return;
+    }
+
+    // user_posts.php supports ?username=... and returns posts for a given username
+    const response = await axios.get(`${postsApi}?username=${encodeURIComponent(username)}`, {
       headers: { 'X-API-Key': '12345' }
     });
-    userPosts.value = response.data;
+    const data = Array.isArray(response.data) ? response.data : [];
+
+    // Normalize date field naming so the UI uses `created_at` consistently
+    userPosts.value = data.map((p: any) => ({
+      id: p.id,
+      title: p.title,
+      content: p.content,
+      created_at: p.createdAt ?? p.created_at ?? ''
+    }));
   } catch (error) {
     console.error('Error loading posts:', error);
   }
@@ -281,14 +259,30 @@ const openChangePassword = () => {
 
 const updateProfile = async () => {
   try {
-    const response = await axios.put(profileApi, editForm.value, {
+    // Server expects current username in `username` and optional new username in `new_username`.
+    // Use the current userProfile.username as the "current" username, and send editForm.username as new_username.
+    const payload = {
+      username: userProfile.value.username,
+      email: editForm.value.email,
+      new_username: editForm.value.username
+    };
+
+    const response = await axios.put(profileApi, payload, {
       headers: { 'X-API-Key': '12345' }
     });
-    
+
     if (response.data.success) {
-      userProfile.value = { ...editForm.value };
+      // If username changed, update local storage so subsequent calls use the new username
+      if (editForm.value.username && editForm.value.username !== userProfile.value.username) {
+        localStorage.setItem('username', editForm.value.username);
+      }
+
+      // Refresh profile and posts to reflect changes
+      await loadUserProfile();
+      await loadUserPosts();
+
       isEditProfileOpen.value = false;
-      
+
       const toast = await toastController.create({
         message: 'Profile updated successfully',
         duration: 2000,
@@ -320,7 +314,7 @@ const changePassword = async () => {
     }, {
       headers: { 'X-API-Key': '12345' }
     });
-    
+
     if (response.data.success) {
       isChangePasswordOpen.value = false;
       const toast = await toastController.create({
@@ -342,14 +336,15 @@ const editPost = (post: Post) => {
 
 const updatePost = async () => {
   try {
+    const username = localStorage.getItem('username') || '';
     const response = await axios.put(`${postsApi}/${editPostForm.value.id}`, editPostForm.value, {
-      headers: { 'X-API-Key': '12345' }
+      headers: { 'X-API-Key': '12345', 'X-Username': username }
     });
-    
+
     if (response.data.success) {
       await loadUserPosts();
       isEditPostOpen.value = false;
-      
+
       const toast = await toastController.create({
         message: 'Post updated successfully',
         duration: 2000,
@@ -373,10 +368,11 @@ const deletePost = async (postId: number) => {
         role: 'destructive',
         handler: async () => {
           try {
+            const username = localStorage.getItem('username') || '';
             const response = await axios.delete(`${postsApi}/${postId}`, {
-              headers: { 'X-API-Key': '12345' }
+              headers: { 'X-API-Key': '12345', 'X-Username': username }
             });
-            
+
             if (response.data.success) {
               await loadUserPosts();
               const toast = await toastController.create({
@@ -393,7 +389,7 @@ const deletePost = async (postId: number) => {
       }
     ]
   });
-  
+
   await alert.present();
 };
 
@@ -407,25 +403,58 @@ const formatDate = (dateString: string) => {
   --background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0b1324 100%);
 }
 
-.profile-card, .posts-card {
+.profile-card,
+.posts-card {
   margin: 1rem;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
 }
 
-.profile-title, .posts-title {
+.profile-title,
+.posts-title {
   color: #ffffff;
   font-weight: 600;
 }
 
-.profile-item, .post-item {
+.profile-item,
+.post-item {
   --background: rgba(255, 255, 255, 0.03);
   --border-radius: 12px;
   margin: 0.5rem 0;
 }
 
-.edit-btn, .password-btn, .save-btn {
+/* Make profile items look like post cards */
+.profile-card ion-list {
+  background: rgba(0, 0, 0, 0.22);
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.profile-item {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 10px;
+  margin: 0.6rem 0;
+}
+
+.profile-item h3 {
+  color: #ffffff;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  font-size: 0.95rem;
+}
+
+.profile-item p {
+  color: rgba(255,255,255,0.85);
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.edit-btn,
+.password-btn,
+.save-btn {
   margin-top: 1rem;
   --border-radius: 12px;
 }
@@ -438,5 +467,53 @@ const formatDate = (dateString: string) => {
 
 .no-posts ion-icon {
   opacity: 0.5;
+}
+
+.post-actions {
+  display: inline-flex;
+  gap: 0.5rem;
+  margin-top: 0;
+  align-items: center;
+}
+
+.post-item {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 10px;
+  margin: 0.4rem 0;
+}
+
+.post-label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.post-actions[slot="end"] {
+  margin-top: 0;
+  margin-left: 0.5rem;
+}
+
+/* Contrast the ion-list inside posts-card to make post items pop */
+.posts-card ion-list {
+  background: rgba(0, 0, 0, 0.22);
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.post-actions-bottom {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin-top: 12px;
+}
+
+/* Tweak buttons in bottom bar */
+.post-actions-bottom ion-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  height: 36px;
 }
 </style>

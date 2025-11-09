@@ -1,6 +1,5 @@
 <template>
     <ion-page>
-        <navbar></navbar>
         <ion-content :fullscreen="true" class="login-content">
             <ion-card class="login-card">
                 <ion-card-header>

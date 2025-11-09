@@ -2,7 +2,7 @@
 // file ini untuk menampilkan data. Kamu bisa membuat sebuah tabel baru di database kamu
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET, OPTIONS");
+header("Access-Control-Allow-Methods: GET, PUT, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, X-API-Key");
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
@@ -21,11 +21,13 @@ $endpoint = $_GET['endpoint'] ?? 'users';
 
 switch($endpoint) {
     case 'users':
-        $query = "SELECT * FROM loginuser";
+        // Return user list but omit password for security
+        $query = "SELECT id, username, email FROM loginuser";
         break;
         
     case 'posts':
-        $query = "SELECT p.*, l.nama as author_name, l.email as author_email 
+        // Join posts with loginuser to include author info (username and email)
+        $query = "SELECT p.*, l.username as author_name, l.email as author_email 
                   FROM post p 
                   INNER JOIN loginuser l ON p.username = l.username 
                   ORDER BY p.createdAt DESC";
@@ -38,11 +40,11 @@ switch($endpoint) {
             echo json_encode(["error" => "Username parameter required"]);
             exit;
         }
-        $query = "SELECT p.*, l.nama as author_name 
-                  FROM post p 
-                  INNER JOIN loginuser l ON p.username = l.username 
-                  WHERE p.username = ? 
-                  ORDER BY p.createdAt DESC";
+    $query = "SELECT p.*, l.username as author_name, l.email as author_email 
+          FROM post p 
+          INNER JOIN loginuser l ON p.username = l.username 
+          WHERE p.username = ? 
+          ORDER BY p.createdAt DESC";
         break;
         
     case 'post_detail':
@@ -52,10 +54,10 @@ switch($endpoint) {
             echo json_encode(["error" => "Post ID parameter required"]);
             exit;
         }
-        $query = "SELECT p.*, l.nama as author_name, l.email as author_email 
-                  FROM post p 
-                  INNER JOIN loginuser l ON p.username = l.username 
-                  WHERE p.id = ?";
+    $query = "SELECT p.*, l.username as author_name, l.email as author_email 
+          FROM post p 
+          INNER JOIN loginuser l ON p.username = l.username 
+          WHERE p.id = ?";
         break;
         
     default:

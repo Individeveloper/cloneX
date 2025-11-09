@@ -20,8 +20,9 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 $username = isset($data['username']) ? trim($data['username']) : null;
 $password = isset($data['password']) ? trim($data['password']) : null;
+$email = isset($data['email']) ? trim($data['email']) : null;
 
-if ($username === '' || $password === '') {
+if ($username === '' || $password === '' || $email === '') {
     http_response_code(400);
     echo json_encode([
         "message" => "Field username dan password wajib diisi dengan benar.",
@@ -30,10 +31,10 @@ if ($username === '' || $password === '') {
     exit(0);
 }
 
-$query = "INSERT INTO loginuser (username, password) VALUES (?, ?)";
+$query = "INSERT INTO loginuser (username, password, email) VALUES (?, ?, ?)";
 $stmt = $conn->prepare($query);
 
-$stmt->bind_param("ss", $username, $password);
+$stmt->bind_param("sss", $username, $password, $email);
 
 if ($stmt->execute()) {
     http_response_code(201);
